@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SK Accessories</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <header>
+        <h1>SK Accessories</h1>
+        <div class="role-switcher">
+            <label for="role-toggle">Admin Mode</label>
+            <label class="switch">
+                <input type="checkbox" id="role-toggle" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <main>
+        <!-- Dashboard View -->
+        <section id="dashboard-view" class="view active">
+            <h2>Dashboard</h2>
+            <div id="category-menu">
+                <!-- Product categories will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- Products View -->
+        <section id="products-view" class="view">
+            <div class="view-header">
+              <h2 id="products-title">Products</h2>
+              <div class="search-container">
+                <span class="material-symbols-outlined">search</span>
+                <input type="search" id="product-search-input" placeholder="Search by name or code...">
+              </div>
+              <div class="view-switcher">
+                <button id="grid-view-btn" class="view-mode-btn active" title="Grid View">
+                  <span class="material-symbols-outlined">grid_view</span>
+                </button>
+                <button id="list-view-btn" class="view-mode-btn" title="List View">
+                  <span class="material-symbols-outlined">view_list</span>
+                </button>
+              </div>
+            </div>
+            <div id="product-grid" class="grid-container">
+                <!-- Products will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- Tools View -->
+        <section id="tools-view" class="view">
+            <h2>Tools</h2>
+            <div id="tools-grid" class="grid-container">
+                <!-- Tool cards will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- About View -->
+        <section id="about-view" class="view">
+            <h2>About Us</h2>
+            <div class="content-card">
+                <p>Welcome to SK Accessories, your number one source for all things fashion. We're dedicated to giving you the very best of accessories, with a focus on quality, customer service, and uniqueness.</p>
+                <p>Founded in 2024, SK Accessories has come a long way from its beginnings. We now serve customers all over the world and are thrilled to be a part of the quirky, eco-friendly, fair trade wing of the fashion industry.</p>
+                <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.</p>
+            </div>
+        </section>
+
+        <!-- Cart View -->
+        <section id="cart-view" class="view">
+            <div class="cart-header">
+                <button id="cart-back-btn" class="btn btn-icon" aria-label="Go Back">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h2>Your Order</h2>
+            </div>
+            <div id="cart-items">
+                <!-- Cart items will be injected here by JS -->
+            </div>
+            <div id="cart-summary" class="content-card">
+                 <!-- Cart summary will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <nav>
+        <button data-view="dashboard-view" class="nav-button active" aria-label="Dashboard">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+        </button>
+        <button data-view="products-view" class="nav-button" aria-label="Products">
+            <span class="material-symbols-outlined">category</span>
+            <span>Products</span>
+        </button>
+        <button data-view="tools-view" class="nav-button" aria-label="Tools" id="tools-nav-btn">
+            <span class="material-symbols-outlined">construction</span>
+            <span>Tools</span>
+        </button>
+        <button data-view="about-view" class="nav-button" aria-label="About Us">
+            <span class="material-symbols-outlined">info</span>
+            <span>About</span>
+        </button>
+    </nav>
+
+    <!-- Floating Cart Button -->
+    <div id="floating-cart-btn" class="floating-cart">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <div class="floating-cart-info">
+            <span id="floating-cart-total" class="cart-total-amount">$0.00</span>
+            <span id="floating-cart-badge" class="item-count">0 items</span>
+        </div>
+    </div>
+
+    <!-- Hidden file input for PDF upload -->
+    <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;">
+    <!-- Hidden file input for Image upload -->
+    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+
+    <!-- Modal for bulk update results -->
+    <div id="update-modal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h3>Bulk Update Summary</h3>
+            <div id="update-loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing PDF and updating product list... Please wait.</p>
+            </div>
+            <div id="update-results">
+                <div id="added-section" style="display: none;">
+                    <h4>Added Products</h4>
+                    <ul id="added-list"></ul>
+                </div>
+                <div id="updated-section" style="display: none;">
+                    <h4>Updated Products</h4>
+                    <ul id="updated-list"></ul>
+                </div>
+                <div id="uncategorized-section" style="display: none;">
+                    <h4>Assign Categories</h4>
+                    <p>Some new products need a category assigned.</p>
+                    <ul id="uncategorized-list"></ul>
+                </div>
+                <div id="not-found-section" style="display: none;">
+                    <h4>Products Not Found</h4>
+                    <ul id="not-found-list"></ul>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="modal-action-btn" class="btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Preview -->
+    <div id="image-preview-modal" class="modal-container" style="display: none;">
+        <span class="close-preview-btn">&times;</span>
+        <img id="preview-image" src="" alt="Product Preview">
+    </div>
+    
+    <!-- Modal for Customer Details -->
+    <div id="customer-details-modal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h3>Customer Details</h3>
+            <p class="modal-subtitle">Please provide your details to place the order.</p>
+            <form id="customer-details-form">
+                <div class="form-group">
+                    <label for="shop-name">Shop Name</label>
+                    <input type="text" id="shop-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="tel" id="phone-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" required>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button id="customer-details-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="customer-details-confirm-btn" class="btn">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Order Confirmation -->
+    <div id="order-confirmation-modal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h3>Order Placed Successfully!</h3>
+            <div id="confirmation-customer-details"></div>
+            <div id="confirmation-details"></div>
+            <h4 id="confirmation-total"></h4>
+            <div class="modal-actions">
+                <button id="confirmation-finish-btn" class="btn btn-success">Finish & Share</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Product Details Edit -->
+    <div id="edit-product-modal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h3>Edit Product Details</h3>
+            <form id="edit-product-form" onsubmit="return false;">
+                <input type="hidden" id="edit-product-id">
+                <div class="form-group">
+                    <label for="edit-product-name">Product Name</label>
+                    <input type="text" id="edit-product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-code">Product Code</label>
+                    <input type="text" id="edit-product-code" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-price">Price (Rs.)</label>
+                    <input type="number" id="edit-product-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-product-uom">Unit of Measurement (UOM)</label>
+                    <input type="text" id="edit-product-uom" required>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button id="edit-product-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="edit-product-save-btn" class="btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="toast"></div>
+
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.run/@google/genai",
+          "html2canvas": "https://esm.run/html2canvas"
+        }
+      }
+    </script>
+    <script type="module" src="index.js"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
